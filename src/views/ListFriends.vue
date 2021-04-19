@@ -66,11 +66,14 @@ export default {
             })
           }
           else {
+            // bug redirect him to new page when room created
             console.log("Does not Exist")
             let newData = this.ref.push()
             newData.set({
               roomName: resp.data
             })
+            // need to redirect to chat page
+            //this.$router.push({name: 'Chat', params: {nickname: localStorage.getItem('username'), roomid: doc.key, roomname: resp.data, friend: friendName}});
           }
         })
       }).catch(err => console.log(err))
@@ -78,9 +81,11 @@ export default {
   },
   mounted() {
     if (!this.username) {
+      console.log("uername not presnt");
       this.$router.push('/login')
     }
     else {
+      console.log("uername is presnt");
       this.listFriends();
     }
   }
