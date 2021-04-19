@@ -11,4 +11,5 @@ let firebaseConfig = {
 };
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
-//abcdTest9&
+export default firebase;
+//abcdTest
