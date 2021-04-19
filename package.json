@@ -16,6 +16,7 @@
     "jquery": "^3.5.1",
     "vue": "^2.6.11",
     "vue-chat-scroll": "^1.4.0",
+    "vue-material": "*",
     "vue-router": "^3.2.0",
     "vue-simple-alert": "^1.1.1"
   },
