@@ -1,9 +1,12 @@
 <template>
-  <div class="app">
+  <div v-if="fetched" class="app">
     <div class='app__body'>
       <Sidebar :friends="friends"/>
       <ChatView />
     </div>
+  </div>
+  <div v-else>
+    <md-progress-spinner md-mode="indeterminate"></md-progress-spinner>
   </div>
 </template>
 
@@ -28,6 +31,7 @@ name: "wChat",
   components : {Sidebar, ChatView},
    data() {
     return {
+      fetched : false,
       friends: [],
       email: '',
       username: localStorage.getItem('username'),
@@ -39,10 +43,14 @@ name: "wChat",
       axios.get(`${API_BASE_URL}private/listFriends`,{'headers' :{
           'Authorization': 'Bearer '+localStorage.getItem('idToken'),
         }}).then(resp => {
+        this.fetched =true
         console.log(resp.data);
         if(resp.status === 200){
           this.friends = resp.data;
           console.log("friends", this.friends);
+        }
+        if(resp.status === 404 ){
+          this.$router.push('/login');
         }
       }).catch(err => console.log(err))
     }
@@ -74,5 +82,7 @@ name: "wChat",
   box-shadow: -1px 4px 20px -6px rgba(0,0,0,0.75);
 }
 
-
+.md-progress-spinner {
+  place-self: center;
+}
 </style>
