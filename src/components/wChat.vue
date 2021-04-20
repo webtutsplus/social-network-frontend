@@ -1,9 +1,12 @@
 <template>
-  <div class="app">
+  <div v-if="fetched" class="app">
     <div class='app__body'>
       <Sidebar :friends="friends"/>
       <ChatView />
     </div>
+  </div>
+  <div v-else>
+    <md-progress-spinner md-mode="indeterminate"></md-progress-spinner>
   </div>
 </template>
 
@@ -15,10 +18,10 @@ import {API_BASE_URL} from '/src/config.js';
 import firebase from "../firebase";
 
 //TODO
-//loader icon
+//loader icon : done 
 // on send msg scroll the chatbox to see latest msgs
 // change color and background of chats
-// when server send 404, redirect to login page
+// when server send 401, redirect to login page: done
 
 
 // Increase the login time per user
@@ -28,6 +31,7 @@ name: "wChat",
   components : {Sidebar, ChatView},
    data() {
     return {
+      fetched : false,
       friends: [],
       email: '',
       username: localStorage.getItem('username'),
@@ -39,12 +43,15 @@ name: "wChat",
       axios.get(`${API_BASE_URL}private/listFriends`,{'headers' :{
           'Authorization': 'Bearer '+localStorage.getItem('idToken'),
         }}).then(resp => {
-        console.log(resp.data);
+        this.fetched =true
         if(resp.status === 200){
           this.friends = resp.data;
           console.log("friends", this.friends);
         }
-      }).catch(err => console.log(err))
+      }).catch((err) => {
+        console.log("coming in error", err);
+        this.$router.push('/login');
+        });
     }
   },
   mounted() {
@@ -74,5 +81,7 @@ name: "wChat",
   box-shadow: -1px 4px 20px -6px rgba(0,0,0,0.75);
 }
 
-
+.md-progress-spinner {
+  place-self: center;
+}
 </style>

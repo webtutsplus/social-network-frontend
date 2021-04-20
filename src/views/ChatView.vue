@@ -22,19 +22,7 @@
         </md-button>
       </div>
     </div>
-    <div class="chat__body">
-      <p :class='`chat__message ${true && "chat__reciever"}`'>
-
-      <span class="chat__name">
-                        someOne</span>
-      hey guys
-      <span class="chat__timestamp">
-                        13:15
-                    </span>
-      </p>
-      <p class="chat__message">
-        hey guys
-      </p>
+    <div class="chat__body" id="container">
       <div v-for="chat in chats" :key="chat.key">
         <p :class='`chat__message ${isMe(chat) && "chat__reciever"}`' >
           {{chat.message}}
@@ -101,6 +89,9 @@ export default {
       axios.get(`${API_BASE_URL}private/getRoomName?friendId=${friendId}`, {'headers':{
           'Authorization': 'Bearer '+localStorage.getItem('idToken'),
       }}).then(resp => {
+        if(resp.status === 401) {
+          this.$router.push('/login')
+        }
         console.log("room name is ", resp.data);
           this.ref.orderByChild('roomName').equalTo(resp.data).once('value', snapshot => {
           if (snapshot.exists()) {
@@ -112,14 +103,23 @@ export default {
             })
           }
         })
-      });
+      }).catch((err) => {
+        console.log("coming in error chatview", err);
+        this.$router.push('/login');
+        });
     }
   },
   mounted(){
+    var container = this.$el.querySelector("#container");
+    container.scrollTop = container.scrollHeight;
+
     this.$root.$on('updateChatViewEvent', friend => {
           console.log("retriving", friend);
+          this.friend = friend;
           this.getRoomName(friend.id);
           this.avatar = friend.picture;
+          var container = this.$el.querySelector("#container");
+          container.scrollTop = container.scrollHeight;
       });
       this.email = localStorage.getItem("username");
   }
@@ -163,7 +163,7 @@ export default {
 
 .chat__body {
   flex: 1;
-  background: repeat center;
+  background: url("https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png") repeat center;
   padding: 30px;
   overflow-y: auto;
 }
@@ -172,7 +172,7 @@ export default {
   position: relative;
   font-size: 16px;
   padding: 10px;
-  background-color: green;
+  background-color: white;
   border-radius: 10px;
   width: fit-content ;
   margin-bottom: 30px;
@@ -192,7 +192,7 @@ export default {
 
 .chat__reciever {
   margin-left: auto;
-  background-color: yellow;
+  background-color: #b0ffb0;
 }
 
 .chat__footer {
