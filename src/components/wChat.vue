@@ -18,10 +18,10 @@ import {API_BASE_URL} from '/src/config.js';
 import firebase from "../firebase";
 
 //TODO
-//loader icon
+//loader icon : done 
 // on send msg scroll the chatbox to see latest msgs
 // change color and background of chats
-// when server send 404, redirect to login page
+// when server send 401, redirect to login page: done
 
 
 // Increase the login time per user
@@ -44,15 +44,14 @@ name: "wChat",
           'Authorization': 'Bearer '+localStorage.getItem('idToken'),
         }}).then(resp => {
         this.fetched =true
-        console.log(resp.data);
         if(resp.status === 200){
           this.friends = resp.data;
           console.log("friends", this.friends);
         }
-        if(resp.status === 404 ){
-          this.$router.push('/login');
-        }
-      }).catch(err => console.log(err))
+      }).catch((err) => {
+        console.log("coming in error", err);
+        this.$router.push('/login');
+        });
     }
   },
   mounted() {

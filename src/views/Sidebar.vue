@@ -14,14 +14,13 @@
         </md-button>
       </div>
     </div>
-    <div class='sidebar__search'>
+    <!-- <div class='sidebar__search'>
       <div class='sidebar__searchContainer'>
         <md-icon>search</md-icon>
         <input placeholder="start new chat"/>
       </div>
-    </div>
+    </div> -->
     <div class='sidebar__chat'>
-      <SidebarChat addNewChat="allow"/>
       <div v-for="(friend, id) in friends" :key="id">
         <SidebarChat :friend="friend" />
       </div>

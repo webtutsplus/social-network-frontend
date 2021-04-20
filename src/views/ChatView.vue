@@ -23,19 +23,6 @@
       </div>
     </div>
     <div class="chat__body" id="container">
-      <p :class='`chat__message ${true && "chat__reciever"}`'>
-
-      <span class="chat__name">
-                        someOne</span>
-      hey guys
-      <span class="chat__timestamp">
-                        13:15
-                    </span>
-      </p>
-      <p class="chat__message">
-        hey guys
-      </p>
-
       <div v-for="chat in chats" :key="chat.key">
         <p :class='`chat__message ${isMe(chat) && "chat__reciever"}`' >
           {{chat.message}}
@@ -102,7 +89,7 @@ export default {
       axios.get(`${API_BASE_URL}private/getRoomName?friendId=${friendId}`, {'headers':{
           'Authorization': 'Bearer '+localStorage.getItem('idToken'),
       }}).then(resp => {
-        if(resp.status === 404) {
+        if(resp.status === 401) {
           this.$router.push('/login')
         }
         console.log("room name is ", resp.data);
@@ -116,7 +103,10 @@ export default {
             })
           }
         })
-      });
+      }).catch((err) => {
+        console.log("coming in error chatview", err);
+        this.$router.push('/login');
+        });
     }
   },
   mounted(){
@@ -125,6 +115,7 @@ export default {
 
     this.$root.$on('updateChatViewEvent', friend => {
           console.log("retriving", friend);
+          this.friend = friend;
           this.getRoomName(friend.id);
           this.avatar = friend.picture;
           var container = this.$el.querySelector("#container");
