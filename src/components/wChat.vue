@@ -1,18 +1,18 @@
 <template>
   <div class="app">
     <div class='app__body'>
-      <Sidebar :friends="friends"/>
+      <wSidebar :friends="friends"/>
       <ChatView />
     </div>
   </div>
 </template>
 
 <script>
-import Sidebar from "@/views/Sidebar";
 import ChatView from "@/views/ChatView";
 import axios from 'axios';
 import {API_BASE_URL} from '/src/config.js';
 import firebase from "../firebase";
+import wSidebar from "@/views/wSidebar";
 
 //TODO
 //loader icon
@@ -25,7 +25,7 @@ import firebase from "../firebase";
 
 export default {
 name: "wChat",
-  components : {Sidebar, ChatView},
+  components : {wSidebar, ChatView},
    data() {
     return {
       friends: [],
