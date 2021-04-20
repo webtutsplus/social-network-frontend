@@ -2,10 +2,11 @@
   <div class="chat">
     <div class="chat__header">
       <md-avatar class="md-large">
-        <img src="https://avatars.githubusercontent.com/u/32813584?s=60&v=4" />
+        <!-- https://avatars.githubusercontent.com/u/32813584?s=60&v=4 -->
+        <img :src="avatar" />
       </md-avatar>
       <div class="chat__headerInfo">
-        <h3> Room Name</h3>
+        <h3> {{friend.email}}</h3>
         <p> Last seen at ...</p>
       </div>
 
@@ -34,12 +35,18 @@
       <p class="chat__message">
         hey guys
       </p>
+      <div v-for="chat in chats" :key="chat.key">
+        <p :class='`chat__message ${isMe(chat) && "chat__reciever"}`' >
+          {{chat.message}}
+        </p>
+      </div>
+
     </div>
     <div class="chat__footer">
       <md-icon>insert_emoticon</md-icon>
-      <form>
-        <input type="text"/>
-        <button type="submit" onClick={sendMessage()}>send a message</button>
+      <form v-on:submit.prevent="onSubmit">
+        <input type="text" id="inputMsg"/>
+        <button type="submit" >send a message</button>
       </form>
       <md-icon>mic</md-icon>
     </div>
@@ -47,12 +54,74 @@
 </template>
 
 <script>
+import firebase from '../firebase';
+import axios from 'axios';
+import {API_BASE_URL} from '/src/config.js';
+
 export default {
-name: "Chat",
-  methods : {
-    sendMessage(e){
-      e.preventDefault();
+  name: "Chat",
+    data () {
+    return {
+      chats: [],
+      ref: firebase.database().ref('chatrooms/'),
+      roomid: null,
+      avatar: null,
+      friend: {}
     }
+  },
+  methods : {
+    onSubmit(){
+      const msg = document.getElementById("inputMsg").value;
+      console.log("msg on submit", msg);
+      let newData = firebase.database().ref('chatrooms/'+this.roomid+'/chats').push();
+      newData.set({
+        type: 'newmsg',
+        user: localStorage.getItem("username"),
+        message: msg,
+        sendDate: Date()
+      });
+      //this.data.message = '';
+      document.getElementById("inputMsg").value = '';
+    },
+    isMe(chat){
+      return chat.user == this.email;
+    },
+    getPreviousChats (roomId) {
+      firebase.database().ref('chatrooms/'+roomId+'/chats').on('value', (snapshot) => {
+        this.chats = [];
+        snapshot.forEach((doc) => {
+          let item = doc.val()
+          item.key = doc.key
+          this.chats.push(item)
+        });
+        console.log("chats",this.chats);
+      });
+    },
+    getRoomName(friendId) {
+      axios.get(`${API_BASE_URL}private/getRoomName?friendId=${friendId}`, {'headers':{
+          'Authorization': 'Bearer '+localStorage.getItem('idToken'),
+      }}).then(resp => {
+        console.log("room name is ", resp.data);
+          this.ref.orderByChild('roomName').equalTo(resp.data).once('value', snapshot => {
+          if (snapshot.exists()) {
+            console.log('Room Exists');
+            snapshot.forEach((doc) => {
+              console.log("roomId", doc.key);
+              this.roomid = doc.key;
+              this.getPreviousChats(doc.key)
+            })
+          }
+        })
+      });
+    }
+  },
+  mounted(){
+    this.$root.$on('updateChatViewEvent', friend => {
+          console.log("retriving", friend);
+          this.getRoomName(friend.id);
+          this.avatar = friend.picture;
+      });
+      this.email = localStorage.getItem("username");
   }
 }
 </script>

@@ -22,10 +22,9 @@
     </div>
     <div class='sidebar__chat'>
       <SidebarChat addNewChat="allow"/>
-      <SidebarChat />
-      <SidebarChat />
-      <SidebarChat />
-      <SidebarChat />
+      <div v-for="(friend, id) in friends" :key="id">
+        <SidebarChat :friend="friend" />
+      </div>
     </div>
   </div>
 </template>
@@ -35,7 +34,8 @@ import SidebarChat from "@/views/SidebarChat";
 
 export default {
 name: "Sidebar",
-  components : {SidebarChat}
+  components : {SidebarChat},
+  props : ['friends'],
 }
 </script>
 
