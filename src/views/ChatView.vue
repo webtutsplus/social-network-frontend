@@ -43,12 +43,11 @@
 
 <script>
 import firebase from '../firebase';
-import axios from 'axios';
-import {API_BASE_URL} from '/src/config.js';
 
 export default {
   name: "Chat",
-    data () {
+  props : ['room'],
+  data () {
     return {
       chats: [],
       ref: firebase.database().ref('chatrooms/'),
@@ -85,15 +84,9 @@ export default {
         console.log("chats",this.chats);
       });
     },
-    getRoomName(friendId) {
-      axios.get(`${API_BASE_URL}private/getRoomName?friendId=${friendId}`, {'headers':{
-          'Authorization': 'Bearer '+localStorage.getItem('idToken'),
-      }}).then(resp => {
-        if(resp.status === 401) {
-          this.$router.push('/login')
-        }
-        console.log("room name is ", resp.data);
-          this.ref.orderByChild('roomName').equalTo(resp.data).once('value', snapshot => {
+    getRoomName(room) {
+         console.log("room name is ", room);
+          this.ref.orderByChild('roomName').equalTo(room).once('value', snapshot => {
           if (snapshot.exists()) {
             console.log('Room Exists');
             snapshot.forEach((doc) => {
@@ -101,26 +94,36 @@ export default {
               this.roomid = doc.key;
               this.getPreviousChats(doc.key)
             })
+          } else {
+            // create a new doc
+              let newData = this.ref.push()
+              newData.set({
+                roomName: room
+              });
+              // after creating the room, get the chats again by recursive function
+              this.getRoomName(room);
           }
         })
-      }).catch((err) => {
-        console.log("coming in error chatview", err);
-        this.$router.push('/login');
-        });
+    },
+    displayFirstRoom(){
+      this.friend = this.room.user;
+      this.getRoomName(this.room.meetingRoom);
+      this.avatar = this.friend.picture;
     }
   },
   mounted(){
     var container = this.$el.querySelector("#container");
     container.scrollTop = container.scrollHeight;
-
-    this.$root.$on('updateChatViewEvent', friend => {
-          console.log("retriving", friend);
-          this.friend = friend;
-          this.getRoomName(friend.id);
-          this.avatar = friend.picture;
+    this.$root.$on('updateChatViewEvent', room => {
+          console.log("retriving", room);
+          this.room = room;
+          this.friend = room.user;
+          this.getRoomName(room.meetingRoom);
+          this.avatar = this.friend.picture;
           var container = this.$el.querySelector("#container");
           container.scrollTop = container.scrollHeight;
       });
+      this.displayFirstRoom();
       this.email = localStorage.getItem("username");
   }
 }

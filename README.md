@@ -10,3 +10,9 @@ chat
 4. if the avatar not present show default avatar
 5. scroll to lastest msg when a chat is opened
 6. highlight select current chat, which is selected
+
+Signup login
+
+1. show email of current user
+2. After registration, send him to login page
+3.

@@ -2,10 +2,10 @@
   <div class='sidebarChat' v-if="!addNewChat"  @click="updateChatView()">
 
     <md-avatar>
-      <img :src="friend.picture">
+      <img :src="room.user.picture">
     </md-avatar>
     <div class='sidebarChat__info'>
-      <h2>{{friend.email}}</h2>
+      <h2>{{room.user.email}}</h2>
       <p>Last message...</p>
     </div>
   </div>
@@ -18,10 +18,10 @@
 <script>
 export default {
 name: "SidebarChat",
-  props : ['addNewChat', "friend"],
+  props : ['addNewChat', "room"],
   methods : {
     updateChatView() {
-      this.$root.$emit('updateChatViewEvent', this.friend);
+      this.$root.$emit('updateChatViewEvent', this.room);
     }
   }
 }

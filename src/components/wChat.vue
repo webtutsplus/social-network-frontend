@@ -1,8 +1,8 @@
 <template>
   <div v-if="fetched" class="app">
     <div class='app__body'>
-      <Sidebar :friends="friends"/>
-      <ChatView />
+      <Sidebar :rooms="rooms"/>
+      <ChatView :room="firstRoom" />
     </div>
   </div>
   <div v-else>
@@ -34,6 +34,8 @@ name: "wChat",
       fetched : false,
       friends: [],
       email: '',
+      rooms: [],
+      firstRoom: {},
       username: localStorage.getItem('username'),
       ref: firebase.database().ref('chatrooms/')
     }
@@ -52,6 +54,25 @@ name: "wChat",
         console.log("coming in error", err);
         this.$router.push('/login');
         });
+    },
+    getRooms(){
+      axios.get(`${API_BASE_URL}private/rooms`,{'headers' :{
+            'Authorization': 'Bearer '+localStorage.getItem('idToken'),
+          }}).then(resp => {
+            this.fetched =true
+            if(resp.status === 200){
+              this.rooms = resp.data;
+              console.log("rooms", this.rooms);
+              if (this.rooms.length > 0) {
+                //update chatview by first user
+                console.log("update chatview by first room", this.rooms[0]);
+                this.firstRoom = this.rooms[0];
+              }
+            }
+        }).catch((err) => {
+          console.log("coming in error", err);
+          this.$router.push('/login');
+          });
     }
   },
   mounted() {
@@ -59,7 +80,8 @@ name: "wChat",
       this.$router.push('/login')
     }
     else {
-      this.listFriends();
+      //this.listFriends();
+      this.getRooms();
     }
   }
 }

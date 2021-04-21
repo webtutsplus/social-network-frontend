@@ -21,8 +21,8 @@
       </div>
     </div> -->
     <div class='sidebar__chat'>
-      <div v-for="(friend, id) in friends" :key="id">
-        <SidebarChat :friend="friend" />
+      <div v-for="(room, id) in rooms" :key="id">
+        <SidebarChat :room="room" />
       </div>
     </div>
   </div>
@@ -34,7 +34,7 @@ import SidebarChat from "@/views/SidebarChat";
 export default {
 name: "Sidebar",
   components : {SidebarChat},
-  props : ['friends'],
+  props : ['rooms'],
 }
 </script>
 
