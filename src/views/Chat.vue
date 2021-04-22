@@ -27,7 +27,7 @@ import ChatSidebar from "@/components/Chat/ChatSidebar";
 // Increase the login time per user
 
 export default {
-name: "wChat",
+name: "Chat",
   components : {ChatSidebar, ChatView},
    data() {
     return {

@@ -1,12 +1,12 @@
 <template>
   <div class='sidebar'>
-    <sidebar-row :title="username"/>
-    <sidebar-row Icon='local_hospital' title='COVID-19 Information Center' />
-    <sidebar-row Icon="emoji_flags" title='Pages'/>
-    <sidebar-row Icon="people" title='Friends'/>
-    <sidebar-row Icon="chat" title='Messenger'/>
-    <sidebar-row Icon="storefront" title='Marketplace'/>
-    <sidebar-row Icon="video_library" title='Videos'/>
+    <SidebarRow :title="username"/>
+    <SidebarRow Icon='local_hospital' title='COVID-19 Information Center' />
+    <SidebarRow Icon="emoji_flags" title='Pages'/>
+    <SidebarRow Icon="people" title='Friends'/>
+    <SidebarRow Icon="chat" title='Messenger'/>
+    <SidebarRow Icon="storefront" title='Marketplace'/>
+    <SidebarRow Icon="video_library" title='Videos'/>
   </div>
 </template>
 
