@@ -8,7 +8,7 @@
         <posts id="post"/>
       </div>
       <div class="col-3">
-        <list-friends/>
+        <list-friends id="friends"/>
       </div>
     </div>
   </div>
@@ -35,6 +35,9 @@ export default {
   position: absolute;
 }
 #post{
+  position: relative;
+}
+#friends{
   position: relative;
 }
 </style>

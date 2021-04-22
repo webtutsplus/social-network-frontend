@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
 import Login from '../views/Login.vue'
 import SignUp from '../views/SignUp.vue'
 import UserList from '../views/ListUsers.vue'
@@ -17,7 +16,7 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: Homefb
   },
   {
     path: '/login',
@@ -54,7 +53,7 @@ const routes = [
     component: ListFriends
   },
   {
-    path: '/wchat',
+    path: '/chat',
     name: 'wchat',
     component: Wchat
   },{
