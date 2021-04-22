@@ -44,11 +44,15 @@ export default {
       axios.get(`${API_BASE_URL}private/listFriends`,{'headers' :{
           'Authorization': 'Bearer '+localStorage.getItem('idToken'),
         }}).then(resp => {
-        console.log(resp.data);
+        console.log("list friends", resp.data, resp.status );
         if(resp.status === 200){
           this.users = resp.data;
         }
-      }).catch(err => console.log(err))
+      }).catch((err) => {
+        if (err.response.status == 401) {
+          this.$router.push('/login');
+        }
+        });
     },
     fetchRoom(id, friendName) {
       console.log(id);

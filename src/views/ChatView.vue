@@ -22,19 +22,7 @@
         </md-button>
       </div>
     </div>
-    <div class="chat__body">
-      <p :class='`chat__message ${true && "chat__reciever"}`'>
-
-      <span class="chat__name">
-                        someOne</span>
-      hey guys
-      <span class="chat__timestamp">
-                        13:15
-                    </span>
-      </p>
-      <p class="chat__message">
-        hey guys
-      </p>
+    <div class="chat__body" id="container">
       <div v-for="chat in chats" :key="chat.key">
         <p :class='`chat__message ${isMe(chat) && "chat__reciever"}`' >
           {{chat.message}}
@@ -55,12 +43,11 @@
 
 <script>
 import firebase from '../firebase';
-import axios from 'axios';
-import {API_BASE_URL} from '/src/config.js';
 
 export default {
   name: "Chat",
-    data () {
+  props : ['room'],
+  data () {
     return {
       chats: [],
       ref: firebase.database().ref('chatrooms/'),
@@ -97,12 +84,9 @@ export default {
         console.log("chats",this.chats);
       });
     },
-    getRoomName(friendId) {
-      axios.get(`${API_BASE_URL}private/getRoomName?friendId=${friendId}`, {'headers':{
-          'Authorization': 'Bearer '+localStorage.getItem('idToken'),
-      }}).then(resp => {
-        console.log("room name is ", resp.data);
-          this.ref.orderByChild('roomName').equalTo(resp.data).once('value', snapshot => {
+    getRoomName(room) {
+         console.log("room name is ", room);
+          this.ref.orderByChild('roomName').equalTo(room).once('value', snapshot => {
           if (snapshot.exists()) {
             console.log('Room Exists');
             snapshot.forEach((doc) => {
@@ -110,17 +94,36 @@ export default {
               this.roomid = doc.key;
               this.getPreviousChats(doc.key)
             })
+          } else {
+            // create a new doc
+              let newData = this.ref.push()
+              newData.set({
+                roomName: room
+              });
+              // after creating the room, get the chats again by recursive function
+              this.getRoomName(room);
           }
         })
-      });
+    },
+    displayFirstRoom(){
+      this.friend = this.room.user;
+      this.getRoomName(this.room.meetingRoom);
+      this.avatar = this.friend.picture;
     }
   },
   mounted(){
-    this.$root.$on('updateChatViewEvent', friend => {
-          console.log("retriving", friend);
-          this.getRoomName(friend.id);
-          this.avatar = friend.picture;
+    var container = this.$el.querySelector("#container");
+    container.scrollTop = container.scrollHeight;
+    this.$root.$on('updateChatViewEvent', room => {
+          console.log("retriving", room);
+          this.room = room;
+          this.friend = room.user;
+          this.getRoomName(room.meetingRoom);
+          this.avatar = this.friend.picture;
+          var container = this.$el.querySelector("#container");
+          container.scrollTop = container.scrollHeight;
       });
+      this.displayFirstRoom();
       this.email = localStorage.getItem("username");
   }
 }
@@ -163,7 +166,7 @@ export default {
 
 .chat__body {
   flex: 1;
-  background: repeat center;
+  background: url("https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png") repeat center;
   padding: 30px;
   overflow-y: auto;
 }
@@ -172,7 +175,7 @@ export default {
   position: relative;
   font-size: 16px;
   padding: 10px;
-  background-color: green;
+  background-color: white;
   border-radius: 10px;
   width: fit-content ;
   margin-bottom: 30px;
@@ -192,7 +195,7 @@ export default {
 
 .chat__reciever {
   margin-left: auto;
-  background-color: yellow;
+  background-color: #b0ffb0;
 }
 
 .chat__footer {

@@ -12,9 +12,8 @@
 
 <script>
 import SidebarRow from "./SidebarRow";
-
 export default {
-name: "Sidebar",
+  name: "Sidebar",
   components: {SidebarRow}
 }
 </script>

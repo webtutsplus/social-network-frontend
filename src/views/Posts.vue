@@ -30,12 +30,14 @@
       <div class='post__top' >
         <div class="post__avatar">
           <md-avatar class="md-large">
-            <img  :src="post.user.picture"/>
+            
+            <img :src='`${post.user.picture}`' v-if="post.user.picture != null"/>
+            <img src="https://avatars.githubusercontent.com/u/32813584?s=60&v=4" v-else/>
           </md-avatar>
         </div>
         <div class='post__topinfo' >
-          <h3>{{post.user.name}}</h3>
-          <p>timestamp...</p>
+          <h3>{{post.user.email}}</h3>
+          <p>{{post.createdDate}}</p>
         </div>
       </div>
 
@@ -88,12 +90,18 @@ export default {
     }
   },
   mounted() {
-    this.getPost();
+    this.getPosts();
   },
   methods: {
-    getPost() {
+    getPosts() {
       axios.get(API_BASE_URL + "public/posts").then(resp => {
         this.posts = resp.data
+      }).catch(err => {
+        console.log(err);
+        //this.$router.push('/login');
+        if (err.response.status == 401) {
+          this.$router.push('/login');
+        }
       });
     },
     getmypost() {
@@ -103,7 +111,12 @@ export default {
         }
       }).then(res => {
         this.posts = res.data
-      }).catch(err => console.log(err));
+      }).catch(err => {
+        console.log(err);
+        if (err.response.status == 401) {
+          this.$router.push('/login');
+        }
+      });
     },
     addpost(e) {
       e.preventDefault();
@@ -112,9 +125,13 @@ export default {
           "Authorization": "Bearer " + localStorage.getItem("idToken")
         }
       }).then(res => {
-        alert("post added");
+        this.content = '';
+        //alert("post added");
         console.log(res.data);
-      }).catch(err => console.log(err));
+        this.getPosts();
+      }).catch(err => {
+        console.log(err);
+      });
     }
   }
 }

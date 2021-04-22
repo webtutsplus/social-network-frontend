@@ -1,11 +1,11 @@
 <template>
-  <div class='sidebarChat' v-if="!addNewChat"  @click="updateChatView(roomName)">
+  <div class='sidebarChat' v-if="!addNewChat"  @click="updateChatView()">
 
     <md-avatar>
-      <img :src="friend.picture">
+      <img :src="room.user.picture">
     </md-avatar>
     <div class='sidebarChat__info'>
-      <h2>{{roomName}}</h2>
+      <h2>{{room.user.email}}</h2>
       <p>Last message...</p>
     </div>
   </div>
@@ -18,18 +18,10 @@
 <script>
 export default {
 name: "SidebarChat",
-  props : ['addNewChat', 'roomName', "friend"],
+  props : ['addNewChat', "room"],
   methods : {
-    createChat() {
-      const roomname = prompt("please enter name for chat");
-      if(roomname){
-        //do some stuff
-      }
-    },
-    updateChatView(roomName) {
-      console.log("updating", roomName);
-      //this.$emit('updateChatViewEvent', roomName);
-      this.$root.$emit('updateChatViewEvent', this.friend);
+    updateChatView() {
+      this.$root.$emit('updateChatViewEvent', this.room);
     }
   }
 }

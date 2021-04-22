@@ -1,9 +1,12 @@
 <template>
-  <div class="app">
+  <div v-if="fetched" class="app">
     <div class='app__body'>
-      <wSidebar :friends="friends"/>
-      <ChatView />
+      <wSidebar :rooms="rooms"/>
+      <ChatView :room="firstRoom" />
     </div>
+  </div>
+  <div v-else>
+    <md-progress-spinner md-mode="indeterminate"></md-progress-spinner>
   </div>
 </template>
 
@@ -15,10 +18,10 @@ import firebase from "../firebase";
 import wSidebar from "@/views/wSidebar";
 
 //TODO
-//loader icon
+//loader icon : done 
 // on send msg scroll the chatbox to see latest msgs
 // change color and background of chats
-// when server send 404, redirect to login page
+// when server send 401, redirect to login page: done
 
 
 // Increase the login time per user
@@ -28,8 +31,11 @@ name: "wChat",
   components : {wSidebar, ChatView},
    data() {
     return {
+      fetched : false,
       friends: [],
       email: '',
+      rooms: [],
+      firstRoom: {},
       username: localStorage.getItem('username'),
       ref: firebase.database().ref('chatrooms/')
     }
@@ -39,12 +45,34 @@ name: "wChat",
       axios.get(`${API_BASE_URL}private/listFriends`,{'headers' :{
           'Authorization': 'Bearer '+localStorage.getItem('idToken'),
         }}).then(resp => {
-        console.log(resp.data);
+        this.fetched =true
         if(resp.status === 200){
           this.friends = resp.data;
           console.log("friends", this.friends);
         }
-      }).catch(err => console.log(err))
+      }).catch((err) => {
+        console.log("coming in error", err);
+        this.$router.push('/login');
+        });
+    },
+    getRooms(){
+      axios.get(`${API_BASE_URL}private/rooms`,{'headers' :{
+            'Authorization': 'Bearer '+localStorage.getItem('idToken'),
+          }}).then(resp => {
+            this.fetched =true
+            if(resp.status === 200){
+              this.rooms = resp.data;
+              console.log("rooms", this.rooms);
+              if (this.rooms.length > 0) {
+                //update chatview by first user
+                console.log("update chatview by first room", this.rooms[0]);
+                this.firstRoom = this.rooms[0];
+              }
+            }
+        }).catch((err) => {
+          console.log("coming in error", err);
+          this.$router.push('/login');
+          });
     }
   },
   mounted() {
@@ -52,7 +80,8 @@ name: "wChat",
       this.$router.push('/login')
     }
     else {
-      this.listFriends();
+      //this.listFriends();
+      this.getRooms();
     }
   }
 }
@@ -74,5 +103,7 @@ name: "wChat",
   box-shadow: -1px 4px 20px -6px rgba(0,0,0,0.75);
 }
 
-
+.md-progress-spinner {
+  place-self: center;
+}
 </style>

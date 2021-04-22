@@ -14,16 +14,15 @@
         </md-button>
       </div>
     </div>
-    <div class='sidebar__search'>
+    <!-- <div class='sidebar__search'>
       <div class='sidebar__searchContainer'>
         <md-icon>search</md-icon>
         <input placeholder="start new chat"/>
-      </div>
-    </div>
+      </div>c
+    </div> -->
     <div class='sidebar__chat'>
-      <SidebarChat addNewChat="allow"/>
-      <div v-for="(friend, id) in friends" :key="id">
-        <SidebarChat :friend="friend" />
+      <div v-for="(room, id) in rooms" :key="id">
+        <SidebarChat :room="room" />
       </div>
     </div>
   </div>
@@ -31,75 +30,16 @@
 
 <script>
 import SidebarChat from "@/views/SidebarChat";
-
 export default {
-name: "Sidebar",
-  components : {SidebarChat},
-  props : ['friends'],
+  name: "Sidebar",
+  components : { SidebarChat },
+  props : ['rooms'],
 }
 </script>
 
 <style scoped>
-.sidebar{
-  display: flex;
-  flex-direction: column;
-  flex: 0.30;
-}
-
-.sidebar__header {
-  display: flex;
-  justify-content: space-between;
-  padding: 20px;
-  border-right: 1px solid lightgrey;
-}
-
-.sidebar__headerRight{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  min-width:  10vw;
-}
-
-.sidebar__headerRight > i {
-  margin-right: 2vw;
-  font-size: 24px !important;
-}
-
-.sidebar__search {
-  display: flex;
-  align-items: center;
-  background-color: #f6f6f6;
-  height: 30px;
-  padding: 10px;
-}
-
-.sidebar__searchContainer {
-  display: flex;
-  align-items: center;
-  background-color: white;
-  width: 100%;
-  height: 35px;
-  border-radius: 20px;
-}
-
-.sidebar__searchContainer > input {
-  border: none;
-  margin-left: 10px;
-}
-
-.sidebar__searchContainer > .md-icon{
-
-  margin: unset;
-  color: gray;
-}
-
-.sidebar__chat {
-  flex: 1;
-  background-color: white;
-  overflow-y: hidden;
-}
-
-.sidebar__chat:hover {
-  overflow-y: auto;
+.sidebar {
+  padding: 25px 10px;
+  flex: 0.33;
 }
 </style>

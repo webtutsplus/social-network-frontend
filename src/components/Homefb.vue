@@ -4,7 +4,7 @@
       <div class="col-3">
         <sidebar id="sidebar"/>
       </div>
-      <div class="col-6">
+      <div class="col-6" style="min-height:800px">
         <posts id="post"/>
       </div>
       <div class="col-3">
@@ -22,7 +22,7 @@ import ListFriends from "../views/ListFriends";
 
 export default {
   name: "Homefb",
-  components: {Sidebar,Posts,ListFriends},
+  components: {Sidebar, Posts, ListFriends},
 }
 </script>
 
