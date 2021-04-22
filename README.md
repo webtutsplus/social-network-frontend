@@ -16,3 +16,9 @@ Signup login
 1. show email of current user
 2. After registration, send him to login page
 3.
+
+Code restructurw
+
+1. make separate directory for wchat and posts in components and view
+2. add options of chat in navbar
+3. delete previous chat code
