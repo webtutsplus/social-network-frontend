@@ -1,6 +1,6 @@
 <template>
   <div class='sidebar'>
-    <sidebar-row title='Tailor Smit'/>
+    <sidebar-row :title="username"/>
     <sidebar-row Icon='local_hospital' title='COVID-19 Information Center' />
     <sidebar-row Icon="emoji_flags" title='Pages'/>
     <sidebar-row Icon="people" title='Friends'/>
@@ -14,7 +14,15 @@
 import SidebarRow from "./SidebarRow";
 export default {
   name: "Sidebar",
-  components: {SidebarRow}
+  components: {SidebarRow},
+  username: '',
+
+  mounted() {
+    this.username = localStorage.getItem('username');
+    if(this.username === '' || !this.username){
+      this.$router.push('/login')
+    }
+  }
 }
 </script>
 
