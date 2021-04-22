@@ -9,6 +9,7 @@ import Room from '../components/Room.vue'
 import AddRoom from '../components/AddRoom.vue'
 import ListFriends from "../views/ListFriends";
 import wChat from "@/components/wChat";
+import Homefb from "@/components/Homefb";
 
 Vue.use(VueRouter)
 
@@ -56,6 +57,10 @@ const routes = [
     path: '/wchat',
     name: 'wchat',
     component: wChat
+  },{
+    path: '/posts',
+    name: 'Posts',
+    component: Homefb
   }
 ]
 

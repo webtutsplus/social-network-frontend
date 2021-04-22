@@ -49,8 +49,9 @@ export default {
           this.users = resp.data;
         }
       }).catch((err) => {
-        console.log("coming in error", err);
-        this.$router.push('/login');
+        if (err.response.status == 401) {
+          this.$router.push('/login');
+        }
         });
     },
     fetchRoom(id, friendName) {
