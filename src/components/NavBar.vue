@@ -14,8 +14,16 @@
             <router-link class="nav-link" :to="'/listusers'">Users</router-link>
           </b-nav-item>
 
+          <b-nav-item v-if="username">
+            <router-link class="nav-link"  :to="'/friends'">Friends</router-link>
+          </b-nav-item>
+
           <b-nav-item v-if="!username">
             <router-link class="nav-link"  :to="'/login'">Chat</router-link>
+          </b-nav-item>
+
+          <b-nav-item v-else>
+            <router-link class="nav-link"  :to="'/chat'">Chat</router-link>
           </b-nav-item>
 
           <b-nav-item v-if="!username">
@@ -31,13 +39,6 @@
           </b-nav-item>
 
 
-          <b-nav-item v-if="username">
-            <router-link class="nav-link"  :to="'/room/'+this.username">Chat</router-link>
-          </b-nav-item>
-
-          <b-nav-item v-if="username">
-            <router-link class="nav-link"  :to="'/friends'">Friends</router-link>
-          </b-nav-item>
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>

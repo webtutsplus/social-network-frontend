@@ -22,17 +22,17 @@
     </div> -->
     <div class='sidebar__chat'>
       <div v-for="(room, id) in rooms" :key="id">
-        <SidebarChat :room="room" />
+        <SidebarChatList :room="room" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import SidebarChat from "@/views/SidebarChat";
+import SidebarChatList from "@/components/Chat/SidebarChatList";
 export default {
-  name: "Sidebar",
-  components : { SidebarChat },
+  name: "ChatSidebar",
+  components : { SidebarChatList },
   props : ['rooms'],
 }
 </script>
