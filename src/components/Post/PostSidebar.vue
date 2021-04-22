@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import SidebarRow from "./SidebarRow";
+import SidebarRow from "./PostSidebarRow";
 export default {
   name: "Sidebar",
   components: {SidebarRow}

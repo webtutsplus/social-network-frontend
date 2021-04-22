@@ -1,7 +1,7 @@
 <template>
   <div v-if="fetched" class="app">
     <div class='app__body'>
-      <wSidebar :rooms="rooms"/>
+      <ChatSidebar :rooms="rooms"/>
       <ChatView :room="firstRoom" />
     </div>
   </div>
@@ -11,11 +11,11 @@
 </template>
 
 <script>
-import ChatView from "@/views/ChatView";
+import ChatView from "@/components/Chat/ChatView";
 import axios from 'axios';
 import {API_BASE_URL} from '/src/config.js';
 import firebase from "../firebase";
-import wSidebar from "@/views/wSidebar";
+import ChatSidebar from "@/components/Chat/ChatSidebar";
 
 //TODO
 //loader icon : done 
@@ -28,7 +28,7 @@ import wSidebar from "@/views/wSidebar";
 
 export default {
 name: "wChat",
-  components : {wSidebar, ChatView},
+  components : {ChatSidebar, ChatView},
    data() {
     return {
       fetched : false,

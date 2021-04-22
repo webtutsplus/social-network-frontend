@@ -2,7 +2,7 @@
   <div class="app__body">
     <div class="row">
       <div class="col-3">
-        <sidebar id="sidebar"/>
+        <PostSidebar id="sidebar"/>
       </div>
       <div class="col-6" style="min-height:800px">
         <posts id="post"/>
@@ -16,13 +16,13 @@
 
 <script>
 
-import Sidebar from "../views/Sidebar";
-import Posts from "../views/Posts";
-import ListFriends from "../views/ListFriends";
+import Posts from "@/components/Post/Posts";
+import ListFriends from "@/views/ListFriends";
+import PostSidebar from "@/components/Post/PostSidebar";
 
 export default {
   name: "Homefb",
-  components: {Sidebar, Posts, ListFriends},
+  components: {PostSidebar, Posts, ListFriends},
 }
 </script>
 
