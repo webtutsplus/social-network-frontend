@@ -17,17 +17,8 @@ import {API_BASE_URL} from '/src/config.js';
 import firebase from "../firebase";
 import ChatSidebar from "@/components/Chat/ChatSidebar";
 
-//TODO
-//loader icon : done 
-// on send msg scroll the chatbox to see latest msgs
-// change color and background of chats
-// when server send 401, redirect to login page: done
-
-
-// Increase the login time per user
-
 export default {
-name: "Chat",
+  name: "Chat",
   components : {ChatSidebar, ChatView},
    data() {
     return {
@@ -41,20 +32,6 @@ name: "Chat",
     }
   },
   methods: {
-    listFriends(){
-      axios.get(`${API_BASE_URL}private/listFriends`,{'headers' :{
-          'Authorization': 'Bearer '+localStorage.getItem('idToken'),
-        }}).then(resp => {
-        this.fetched =true
-        if(resp.status === 200){
-          this.friends = resp.data;
-          console.log("friends", this.friends);
-        }
-      }).catch((err) => {
-        console.log("coming in error", err);
-        this.$router.push('/login');
-        });
-    },
     getRooms(){
       axios.get(`${API_BASE_URL}private/rooms`,{'headers' :{
             'Authorization': 'Bearer '+localStorage.getItem('idToken'),
@@ -80,7 +57,6 @@ name: "Chat",
       this.$router.push('/login')
     }
     else {
-      //this.listFriends();
       this.getRooms();
     }
   }
