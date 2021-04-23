@@ -53,8 +53,8 @@
                     const token = "Bearer " + idToken
                     const url = `${API_BASE_URL}private/saveUser`;
                     saveUser(url, token);
-                  })
-                  this.$router.replace('/');
+                    this.$router.replace('/');
+                  });
                 },
                 (err) => {
                   alert('Oops. ' + err.message)

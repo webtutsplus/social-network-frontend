@@ -1,6 +1,5 @@
 <template>
   <div class='sidebarChat' v-if="!addNewChat"  @click="updateChatView()">
-
     <md-avatar>
       <img :src="room.user.picture">
     </md-avatar>
@@ -17,7 +16,7 @@
 
 <script>
 export default {
-name: "SidebarChat",
+  name: "SidebarChatUserRow",
   props : ['addNewChat', "room"],
   methods : {
     updateChatView() {

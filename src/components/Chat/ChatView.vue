@@ -67,7 +67,6 @@ export default {
         message: msg,
         sendDate: Date()
       });
-      //this.data.message = '';
       document.getElementById("inputMsg").value = '';
     },
     isMe(chat){
