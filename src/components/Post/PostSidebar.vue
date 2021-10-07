@@ -3,8 +3,8 @@
     <SidebarRow :title="username"/>
     <SidebarRow Icon='local_hospital' title='COVID-19 Information Center' />
     <SidebarRow Icon="emoji_flags" title='Pages'/>
-    <SidebarRow Icon="people" title='Friends'/>
-    <SidebarRow Icon="chat" title='Messenger'/>
+    <SidebarRow Icon="people" title='Friends' link="friends"/>
+    <SidebarRow Icon="chat" title='Messenger' link="chat"/>
     <SidebarRow Icon="storefront" title='Marketplace'/>
     <SidebarRow Icon="video_library" title='Videos'/>
   </div>

@@ -5,7 +5,13 @@
     <div v-if="Icon" class="icon">
       <md-icon md-theme="color">{{Icon}}</md-icon>
     </div>
-    <h5>{{ title }}</h5>
+    <div v-if="link">
+      <router-link :to="link"> <h5> {{ title }}</h5></router-link>
+    </div>
+    <div v-else>
+      <h5> {{ title }}</h5>
+    </div>
+
   </div>
 </template>
 
@@ -13,7 +19,7 @@
 export default {
 name: "SidebarRow",
   props: [
-    'src','Icon','title'
+    'src','Icon','title', 'link'
   ]
 }
 </script>
@@ -39,5 +45,10 @@ name: "SidebarRow",
 .sidebarRow > .icon {
   font-size: xx-large;
   color: gray;
+  margin-right: 5px;
 }
+
+  a:hover {
+    text-decoration: none;
+  }
 </style>

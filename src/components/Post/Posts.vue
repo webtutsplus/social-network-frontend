@@ -1,92 +1,113 @@
 <template>
   <div id="post">
-    <div class='messageSender'>
-      <div class='messageSender__top'>
+    <div class="messageSender">
+      <div class="messageSender__top">
         <md-avatar>
           <md-icon>account_circle</md-icon>
         </md-avatar>
         <form>
-          <input class='messageSender__input' placeholder="what's on your mind" v-model="content" @click="add=true"/>
-          <input placeholder='image URL (Optional)'/>
-          <button type='submit' @click="addpost($event)">hidden submit</button>
+          <input
+            class="messageSender__input"
+            placeholder="what's on your mind"
+            v-model="content"
+            @click="add = true"
+          />
+          <input placeholder="image URL (Optional)" />
+          <button type="submit" @click="addpost($event)">hidden submit</button>
         </form>
       </div>
     </div>
 
-
     <div v-if="add" id="popup1" class="overlay">
       <div class="popup">
         <h4>Create a Post</h4>
-        <a class="close" @click="add=false">&times;</a>
-        <hr>
+        <a class="close" @click="add = false">&times;</a>
+        <hr />
         <div class="content">
           <form>
             <md-field>
-              <md-textarea v-model="content" style="width: 100%; border: none" placeholder="what's on you mind?"
-                           required></md-textarea>
+              <md-textarea
+                v-model="content"
+                style="width: 100%; border: none"
+                placeholder="what's on you mind?"
+                required
+              ></md-textarea>
             </md-field>
-            <div class='messageSender__bottom'>
-              <div class='messageSender__option'>
+            <div class="messageSender__bottom">
+              <div class="messageSender__option">
                 <md-icon style="color: red">videocam</md-icon>
                 <h3>Live Video</h3>
               </div>
 
-              <div class='messageSender__option'>
+              <div class="messageSender__option">
                 <md-icon style="color: green">photo_library</md-icon>
                 <h3>Photo/Video</h3>
               </div>
 
-              <div class='messageSender__option'>
+              <div class="messageSender__option">
                 <md-icon style="color: orange">insert_emoticon</md-icon>
                 <h3>Feeling/Activity</h3>
               </div>
             </div>
-            <MdButton class="submit__post" style="color: white" @click="addpost($event)">post</MdButton>
+            <MdButton
+              class="submit__post"
+              style="color: white"
+              @click="addpost($event)"
+              >post</MdButton
+            >
           </form>
         </div>
       </div>
     </div>
 
-    <div class='post' v-for="post in posts" :key="post.id">
-      <div class='post__top'>
+    <div class="post" v-for="post in posts" :key="post.id">
+      <div v-if="post.user" class="post__top">
         <div class="post__avatar">
           <md-avatar class="md-large">
-
-            <img :src='`${post.user.picture}`' v-if="post.user.picture != null"/>
-            <img src="https://avatars.githubusercontent.com/u/32813584?s=60&v=4" v-else/>
+            <img
+              :src="`${post.user.picture}`"
+              v-if="post.user && post.user.picture != null"
+            />
+            <img
+              src="https://avatars.githubusercontent.com/u/32813584?s=60&v=4"
+              v-else
+            />
           </md-avatar>
         </div>
-        <div class='post__topinfo'>
+        <div class="post__topinfo">
           <h3>{{ post.user.email }}</h3>
           <p>{{ post.createdDate }}</p>
         </div>
       </div>
 
-      <div class='post__bottom'>
+      <div class="post__bottom">
         <p>{{ post.content }}</p>
       </div>
 
-      <div class='post__options'>
-        <div class='post__option'>
-          <p>
+      <div class="post__options">
+        <div class="post__option">
+          <p></p>
           <div class="icon__text">
             <md-icon>thumb_up</md-icon>
             Like
           </div>
         </div>
-        <div class='post__option'><p>
+        <div class="post__option">
+          <p></p>
           <div class="icon__text">
             <md-icon>chat_bubble</md-icon>
             Comment
           </div>
         </div>
-        <div class='post__option'><p>
+        <div class="post__option">
+          <p></p>
           <div class="icon__text">
             <md-icon>near_me</md-icon>
             Share
           </div>
         </div>
-        <div class='post__option'><p>
+        <div class="post__option">
+          <p></p>
           <div class="icon__text">
             <md-icon>account_circle</md-icon>
             Account info
@@ -94,13 +115,12 @@
         </div>
       </div>
     </div>
-
   </div>
 </template>
 <script>
 import axios from "axios";
-import {API_BASE_URL} from '/src/config.js';
-import $ from 'jquery'
+import { API_BASE_URL } from "/src/config.js";
+import $ from "jquery";
 
 export default {
   name: "Posts",
@@ -112,7 +132,7 @@ export default {
       users: [],
       selected: null,
       user: null,
-    }
+    };
   },
   mounted() {
     this.getPosts();
@@ -120,52 +140,64 @@ export default {
   },
   methods: {
     getPosts() {
-      axios.get(API_BASE_URL + "public/posts").then(resp => {
-        this.posts = resp.data
-      }).catch(err => {
-        console.log(err);
-        //this.$router.push('/login');
-        if (err.response.status == 401) {
-          this.$router.push('/login');
-        }
-      });
+      axios
+        .get(API_BASE_URL + "public/posts")
+        .then((resp) => {
+          this.posts = resp.data;
+        })
+        .catch((err) => {
+          console.log(err);
+          //this.$router.push('/login');
+          if (err.response.status == 401) {
+            this.$router.push("/login");
+          }
+        });
     },
     getmypost() {
-      axios.get(API_BASE_URL + "private/mypost", {
-        "headers": {
-          "Authorization": "Bearer " + localStorage.getItem("idToken")
-        }
-      }).then(res => {
-        this.posts = res.data
-      }).catch(err => {
-        console.log(err);
-        if (err.response.status == 401) {
-          this.$router.push('/login');
-        }
-      });
+      axios
+        .get(API_BASE_URL + "private/mypost", {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("idToken"),
+          },
+        })
+        .then((res) => {
+          this.posts = res.data;
+        })
+        .catch((err) => {
+          console.log(err);
+          if (err.response.status == 401) {
+            this.$router.push("/login");
+          }
+        });
     },
     addpost(e) {
       e.preventDefault();
-      axios.post(API_BASE_URL + "private/addpost", {"content": this.content}, {
-        "headers": {
-          "Authorization": "Bearer " + localStorage.getItem("idToken")
-        }
-      }).then(res => {
-        this.content = '';
-        //alert("post added");
-        console.log(res.data);
-        this.add = false;
-        this.getPosts();
-      }).catch(err => {
-        console.log(err);
-      });
-    }
-  }
-}
+      axios
+        .post(
+          API_BASE_URL + "private/addpost",
+          { content: this.content },
+          {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("idToken"),
+            },
+          }
+        )
+        .then((res) => {
+          this.content = "";
+          //alert("post added");
+          console.log(res.data);
+          this.add = false;
+          this.getPosts();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+  },
+};
 </script>
 
 <style scoped>
-
 .messageSender {
   display: flex;
   margin-top: 30px;
@@ -204,15 +236,13 @@ export default {
   flex: 1;
 }
 
-
-
- .messageSender__bottom {
+.messageSender__bottom {
   display: flex;
   width: fit-content;
   justify-content: space-between;
 }
 
- .messageSender__option {
+.messageSender__option {
   padding: 0px;
   display: flex;
   align-items: center;
@@ -263,7 +293,6 @@ export default {
   margin-top: 10px;
   margin-bottom: 10px;
   padding: 15px 25px;
-
 }
 
 .post__image > img {
@@ -290,7 +319,6 @@ export default {
 
 .icon__text {
   padding-left: 15px;
-
 }
 
 .post__option:hover {
@@ -313,7 +341,7 @@ export default {
   font-size: 1em;
   padding: 10px;
   color: #fff;
-  border: 2px solid #06D85F;
+  border: 2px solid #06d85f;
   border-radius: 20px/50px;
   text-decoration: none;
   cursor: pointer;
@@ -321,7 +349,7 @@ export default {
 }
 
 .button:hover {
-  background: #06D85F;
+  background: #06d85f;
 }
 
 .overlay {
@@ -372,12 +400,11 @@ export default {
 }
 
 .popup .close:hover {
-  color: #06D85F;
+  color: #06d85f;
 }
 
 .popup .content {
   max-height: 30%;
-
 }
 
 @media screen and (max-width: 700px) {
@@ -396,5 +423,4 @@ export default {
   width: 100%;
   margin-left: 0px;
 }
-
 </style>
